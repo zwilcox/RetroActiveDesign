@@ -1,0 +1,112 @@
+
+
+NET "Clock" LOC = C9;
+NET "MP3Trig[1]" LOC = D7;
+NET "MP3Trig[2]" LOC = F8;
+NET "MP3Trig[3]" LOC = F9;
+NET "MP3Trig[4]" LOC = D11;
+NET "MP3Trig[5]" LOC = C5;
+NET "MP3Trig[6]" LOC = F7;
+##NET "MP3Trig[7]" LOC = E11;
+##NET "MP3Trig[8]" LOC = F12;
+##NET "MP3Trig[9]" LOC = B13;
+##NET "MP3Trig[10]" LOC = B14;
+##NET "MP3Trig[11]" LOC = D14;
+##NET "MP3Trig[12]" LOC = B16;
+##NET "MP3Trig[13]" LOC = C4;
+##NET "MP3Trig[14]" LOC = E7;
+NET "MP3Trig[15]" LOC = C7;
+NET "MP3Trig[16]" LOC = E8;
+##NET "MP3Trig[17]" LOC = F9;
+##NET "MP3Trig[18]" LOC = D11;
+NET "NES_Latch" LOC = A4;
+NET "NES_Pulse" LOC = D5;
+
+NET "latch2" LOC = B6;
+NET "pulse2" LOC = A6;
+
+NET "SevenSegCat" LOC = F11;
+NET "SevenSegs[0]" LOC = E12;
+NET "SevenSegs[1]" LOC = A13;
+NET "SevenSegs[2]" LOC = A14;
+NET "SevenSegs[3]" LOC = C14;
+NET "SevenSegs[4]" LOC = A16;
+NET "SevenSegs[5]" LOC = E13;
+NET "SevenSegs[6]" LOC = B11;
+NET "controller_data" LOC = B4;
+
+NET "controller_data2" LOC = E7;
+NET "reset" LOC = K17;
+
+
+NET "Clock" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[1]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[2]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[3]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[4]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[5]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[6]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[7]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[8]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[9]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[10]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[11]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[12]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[13]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[14]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[15]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[16]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[17]" IOSTANDARD = LVCMOS33;
+NET "MP3Trig[18]" IOSTANDARD = LVCMOS33;
+NET "NES_Latch" IOSTANDARD = LVCMOS33;
+NET "NES_Pulse" IOSTANDARD = LVCMOS33;
+
+NET "latch2" IOSTANDARD = LVCMOS33;
+NET "pulse2" IOSTANDARD = LVCMOS33;
+
+NET "SevenSegCat" IOSTANDARD = LVTTL;
+NET "SevenSegs[0]" IOSTANDARD = LVTTL;
+NET "SevenSegs[1]" IOSTANDARD = LVTTL;
+NET "SevenSegs[2]" IOSTANDARD = LVTTL;
+NET "SevenSegs[3]" IOSTANDARD = LVTTL;
+NET "SevenSegs[4]" IOSTANDARD = LVTTL;
+NET "SevenSegs[5]" IOSTANDARD = LVTTL;
+NET "SevenSegs[6]" IOSTANDARD = LVTTL;
+NET "controller_data" IOSTANDARD = LVCMOS33;
+NET "controller_data2" IOSTANDARD = LVCMOS33;
+NET "reset" IOSTANDARD = LVTTL;
+NET "SevenSegCat" DRIVE = 8;
+NET "SevenSegs[0]" DRIVE = 8;
+NET "SevenSegs[1]" DRIVE = 8;
+NET "SevenSegs[2]" DRIVE = 8;
+NET "SevenSegs[3]" DRIVE = 8;
+NET "SevenSegs[4]" DRIVE = 8;
+NET "SevenSegs[5]" DRIVE = 8;
+NET "SevenSegs[6]" DRIVE = 8;
+NET "reset" PULLDOWN;
+
+# PlanAhead Generated physical constraints 
+
+NET "blue" LOC = G15;
+NET "green" LOC = H15;
+NET "hSync" LOC = F15;
+NET "red" LOC = H14;
+NET "vSync" LOC = F14;
+
+# PlanAhead Generated IO constraints 
+
+NET "blue" IOSTANDARD = LVTTL;
+NET "green" IOSTANDARD = LVTTL;
+NET "hSync" IOSTANDARD = LVTTL;
+NET "red" IOSTANDARD = LVTTL;
+NET "vSync" IOSTANDARD = LVTTL;
+NET "blue" DRIVE = 8;
+NET "green" DRIVE = 8;
+NET "hSync" DRIVE = 8;
+NET "red" DRIVE = 8;
+NET "vSync" DRIVE = 8;
+NET "blue" SLEW = FAST;
+NET "green" SLEW = FAST;
+NET "hSync" SLEW = FAST;
+NET "red" SLEW = FAST;
+NET "vSync" SLEW = FAST;

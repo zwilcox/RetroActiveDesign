@@ -1,0 +1,9 @@
+trigger 1 - opening song
+trigger 2 - WAKA WAKA
+trigger 3 - Siren
+trigger 4 - PacMan Dies
+trigger 5 - PacMan Cherry Sound
+trigger 6 - Intermission
+
+trigger 16 - stop
+trigger 15 - start

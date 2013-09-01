@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<symbol version="7" name="ControlLogic">
+    <symboltype>BLOCK</symboltype>
+    <timestamp>2012-11-3T20:36:7</timestamp>
+    <attr value="ControlLogic" name="VeriModel" />
+    <pin polarity="Input" x="192" y="-112" name="reset" />
+    <pin polarity="Input" x="368" y="-112" name="Clk" />
+    <pin polarity="Input" x="256" y="-112" name="OPCode(3:0)" />
+    <pin polarity="Input" x="320" y="-112" name="OPCodeExtension(3:0)" />
+    <pin polarity="Output" x="560" y="-336" name="InstrWrite" />
+    <pin polarity="Output" x="560" y="-432" name="RegWrite" />
+    <pin polarity="Output" x="560" y="-1072" name="ALUSrcB(1:0)" />
+    <pin polarity="Output" x="560" y="-1168" name="MemWrite" />
+    <pin polarity="Output" x="560" y="-384" name="SignExtend" />
+    <pin polarity="Output" x="560" y="-976" name="ALUop(1:0)" />
+    <pin polarity="Output" x="560" y="-1024" name="RegDataSRC(2:0)" />
+    <pin polarity="Output" x="112" y="-912" name="SetC" />
+    <pin polarity="Output" x="112" y="-864" name="SetL" />
+    <pin polarity="Output" x="112" y="-816" name="SetF" />
+    <pin polarity="Output" x="112" y="-768" name="SetZ" />
+    <pin polarity="Output" x="112" y="-720" name="SetN" />
+    <pin polarity="Input" x="112" y="-1056" name="PSR_Value(4:0)" />
+    <pin polarity="Output" x="560" y="-928" name="PCSource(1:0)" />
+    <pin polarity="Output" x="560" y="-288" name="PCWrite" />
+    <pin polarity="Input" x="416" y="-112" name="JCond(3:0)" />
+    <pin polarity="Output" x="560" y="-1120" name="SCond(15:0)" />
+    <pin polarity="Input" x="464" y="-112" name="cond(3:0)" />
+    <graph>
+        <attrtext style="alignment:RIGHT" attrname="PinName" x="488" y="-336" type="pin InstrWrite" />
+        <attrtext style="alignment:RIGHT" attrname="PinName" x="488" y="-432" type="pin RegWrite" />
+        <attrtext style="alignment:RIGHT" attrname="PinName" x="488" y="-1072" type="pin ALUSrcB(1:0)" />
+        <attrtext style="alignment:RIGHT" attrname="PinName" x="488" y="-1168" type="pin MemWrite" />
+        <attrtext style="alignment:RIGHT" attrname="PinName" x="488" y="-384" type="pin SignExtend" />
+        <attrtext style="alignment:RIGHT" attrname="PinName" x="488" y="-976" type="pin ALUop(1:0)" />
+        <attrtext style="alignment:RIGHT" attrname="PinName" x="488" y="-1024" type="pin RegDataSRC(2:0)" />
+        <rect width="332" x="164" y="-1292" height="1116" />
+        <rect width="64" x="496" y="-988" height="24" />
+        <line x2="560" y1="-976" y2="-976" x1="496" />
+        <rect width="64" x="496" y="-1036" height="24" />
+        <line x2="560" y1="-1024" y2="-1024" x1="496" />
+        <line x2="560" y1="-1072" y2="-1072" x1="496" />
+        <line x2="560" y1="-1168" y2="-1168" x1="496" />
+        <line x2="320" y1="-112" y2="-176" x1="320" />
+        <rect width="28" x="304" y="-176" height="64" />
+        <rect width="28" x="240" y="-176" height="64" />
+        <line x2="256" y1="-112" y2="-176" x1="256" />
+        <line x2="192" y1="-112" y2="-176" x1="192" />
+        <line x2="560" y1="-432" y2="-432" x1="496" />
+        <line x2="560" y1="-336" y2="-336" x1="496" />
+        <line x2="368" y1="-112" y2="-176" x1="368" />
+        <line x2="560" y1="-384" y2="-384" x1="496" />
+        <attrtext style="alignment:VCENTER;fontsize:56;fontname:Arial" attrname="SymbolName" x="328" y="-700" type="symbol" />
+        <line x2="164" y1="-912" y2="-912" x1="112" />
+        <text x="176" y="-912">SetC</text>
+        <text x="176" y="-864">SetL</text>
+        <text x="172" y="-812">SetF</text>
+        <text x="172" y="-720">SetN</text>
+        <text x="172" y="-764">SetZ</text>
+        <line x2="164" y1="-864" y2="-864" x1="112" />
+        <line x2="164" y1="-816" y2="-816" x1="112" />
+        <line x2="164" y1="-768" y2="-768" x1="112" />
+        <line x2="164" y1="-720" y2="-720" x1="112" />
+        <line x2="164" y1="-1056" y2="-1056" x1="112" />
+        <text style="alignment:VCENTER" x="184" y="-1060">PSR_Value(4:0)</text>
+        <rect width="52" x="112" y="-1068" height="24" />
+        <rect width="64" x="496" y="-1084" height="24" />
+        <line x2="560" y1="-928" y2="-928" x1="496" />
+        <rect width="64" x="496" y="-940" height="24" />
+        <attrtext style="alignment:RIGHT" attrname="PinName" x="488" y="-928" type="pin PCSource(1:0)" />
+        <attrtext style="alignment:RIGHT" attrname="PinName" x="488" y="-288" type="pin PCWrite" />
+        <line x2="560" y1="-288" y2="-288" x1="496" />
+        <line x2="416" y1="-112" y2="-176" x1="416" />
+        <rect width="28" x="400" y="-176" height="64" />
+        <attrtext style="alignment:VLEFT" attrname="PinName" x="368" y="-184" type="pin Clk" />
+        <attrtext style="alignment:VLEFT" attrname="PinName" x="320" y="-180" type="pin OPCodeExtension(3:0)" />
+        <attrtext style="alignment:VLEFT" attrname="PinName" x="256" y="-180" type="pin OPCode(3:0)" />
+        <attrtext style="alignment:VLEFT" attrname="PinName" x="192" y="-188" type="pin reset" />
+        <attrtext style="alignment:VLEFT" attrname="PinName" x="416" y="-180" type="pin JCond(3:0)" />
+        <attrtext style="alignment:RIGHT" attrname="PinName" x="488" y="-1120" type="pin SCond(15:0)" />
+        <line x2="560" y1="-1120" y2="-1120" x1="496" />
+        <rect width="64" x="496" y="-1132" height="24" />
+        <attrtext style="alignment:VLEFT" attrname="PinName" x="464" y="-184" type="pin cond(3:0)" />
+        <line x2="464" y1="-112" y2="-176" x1="464" />
+        <rect width="28" x="448" y="-176" height="64" />
+    </graph>
+</symbol>

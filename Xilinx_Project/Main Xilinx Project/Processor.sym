@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<symbol version="7" name="Processor">
+    <symboltype>BLOCK</symboltype>
+    <timestamp>2012-11-10T22:0:19</timestamp>
+    <pin polarity="Input" x="16" y="1088" name="Clk" />
+    <pin polarity="Input" x="16" y="1376" name="Reset" />
+    <pin polarity="Input" x="16" y="1152" name="ReadData(15:0)" />
+    <pin polarity="Input" x="16" y="1232" name="ALUB_input3(15:0)" />
+    <pin polarity="Input" x="16" y="1280" name="PCSource3(15:0)" />
+    <pin polarity="Output" x="672" y="1104" name="MemWrite" />
+    <pin polarity="Output" x="672" y="1200" name="Address(15:0)" />
+    <pin polarity="Output" x="672" y="1296" name="Data(15:0)" />
+    <graph>
+        <attrtext style="alignment:BCENTER;fontsize:56;fontname:Arial" attrname="SymbolName" x="332" y="1024" type="symbol" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="88" y="1088" type="pin Clk" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="88" y="1376" type="pin Reset" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="88" y="1156" type="pin ReadData(15:0)" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="88" y="1232" type="pin ALUB_input3(15:0)" />
+        <attrtext style="fontsize:24;fontname:Arial" attrname="PinName" x="88" y="1284" type="pin PCSource3(15:0)" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="600" y="1104" type="pin MemWrite" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="604" y="1200" type="pin Address(15:0)" />
+        <attrtext style="alignment:RIGHT;fontsize:24;fontname:Arial" attrname="PinName" x="600" y="1300" type="pin Data(15:0)" />
+        <rect width="528" x="80" y="1060" height="332" />
+        <line x2="16" y1="1284" y2="1284" x1="80" />
+        <rect width="64" x="16" y="1272" height="24" />
+        <line x2="16" y1="1232" y2="1232" x1="80" />
+        <rect width="64" x="16" y="1220" height="24" />
+        <line x2="16" y1="1156" y2="1156" x1="80" />
+        <rect width="64" x="16" y="1144" height="24" />
+        <line x2="16" y1="1376" y2="1376" x1="80" />
+        <line x2="84" y1="1088" y2="1088" x1="16" />
+        <line x2="672" y1="1104" y2="1104" x1="608" />
+        <line x2="676" y1="1200" y2="1200" x1="612" />
+        <rect width="64" x="612" y="1188" height="28" />
+        <line x2="672" y1="1300" y2="1300" x1="608" />
+        <rect width="64" x="608" y="1288" height="24" />
+    </graph>
+</symbol>

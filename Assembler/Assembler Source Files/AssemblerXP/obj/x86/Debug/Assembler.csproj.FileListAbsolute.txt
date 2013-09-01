@@ -1,0 +1,13 @@
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\obj\x86\Debug\Assembler.AssemblerForm.resources
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.Properties.Resources.resources
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\obj\x86\Debug\Assembler.csproj.GenerateResource.Cache
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\obj\x86\Debug\Assembler.ErrorForm.resources
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.exe
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.pdb
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.manifest
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.application
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.exe.manifest
+d:\users\u0395625\documents\visual studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\obj\x86\Debug\WindowsFormsApplication1.application
+D:\Users\u0395625\Documents\Visual Studio 2010\Projects\AssemblerXP\WindowsFormsApplication1\obj\x86\Debug\Assembler.csprojResolveAssemblyReference.cache

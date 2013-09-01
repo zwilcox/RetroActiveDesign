@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=C:\Users\Ari\Documents\ece3710\pacman2\CR16\Asteroid_System.ncd
+OUTFILE=C:\Users\Ari\Documents\ece3710\pacman2\CR16\Asteroid_System.bit
+FAMILY=Spartan3E
+PART=xc3s500e-5fg320
+WORKINGDIR=C:\Users\Ari\Documents\ece3710\pacman2\CR16
+LICENSE=WebPack
+USER_INFO=0_0_072

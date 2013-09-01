@@ -1,0 +1,36 @@
+//set spot in FBCPY to a blank glyph.
+LUI 51 r1		//make address 13200 where pacman location is stored
+ORI 144 r1	
+LOAD r1 r1
+JAL r6 FBpos_2_CPpos
+LOAD r0 r1
+CMPI 0 r0
+BNE CheckPill
+JAL r6 playBlankSong
+BUC state0_updown
+
+CheckPill:
+LUI 255 r2
+ADDI 16 r2
+CMP r2 r0
+BNE checkSuperPill
+MOVI 0 r2
+STOR r2 r1
+JAL r6 update_score
+JAL r6 playPillSong
+JAL r6 DecrementPillcount
+BUC state0_updown
+
+checkSuperPill:
+LUI 255 r2
+ADDI 45 r2
+CMP r2 r0
+BNE state0_updown
+MOVI 0 r2
+STOR r2 r1
+JAL r6 update_score
+JAL r6 update_score
+JAL r6 update_score
+JAL r6 update_score
+JAL r6 DecrementPillcount
+JAL r6 playPillSong

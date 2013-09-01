@@ -1,0 +1,11 @@
+%0 <- 0
+%1 - 5 <--- temp reg
+%6 - 7 <--- macro...temp reg if not using macro
+%8 - 12 <--- saved register
+%sp <--- sp
+%fp <--- fp
+%ra <--- ra
+
+
+
+

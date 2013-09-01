@@ -1,0 +1,14 @@
+[Inputs]
+MemWrite
+clk
+pxlClk
+=ADDR[13:0]=
+=DATA[15:0]=
+=glyphAdd[13:0]=
+[Outputs]
+=ReadData[15:0]=
+=glyphData[15:0]=
+[BiDir]
+[ATTRIBUTES]
+VeriModel Memory
+

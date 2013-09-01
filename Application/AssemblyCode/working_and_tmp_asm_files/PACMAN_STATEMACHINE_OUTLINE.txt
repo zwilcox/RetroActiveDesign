@@ -1,0 +1,621 @@
+//:::PACMAN STATE MACHINE:::
+
+//register usage: r14 used to save return address of this function.
+//registers r0, r1 destroyed as general purpose, r4 used to store state address
+
+
+// STATES:
+// For the '0' states, the state feild will evaluate to 0 if masked with 0x0F (15).
+// the ZERO ('0') states are where pacman is centered on a tile.
+// In the 0 state pacman will continue moving forward unless the player inputs a direction
+// if pacman reaches any state0 and a ghost position is this tile, nextstate is dead1.
+//
+// 0x10: pacmanUP0  (16)	   --centered on tile, facing up.     nextstate will be up1, unless player input
+// 0x20: pacmanDOWN0   (32)	   --centered on tile, facing down.   nextstate is player input direction, else down1
+// 0x30: pacmanLEFT0   (48)	   --centered on tile, facing left.   nextstate is player input direction, else left1
+// 0x40: pacmanRIGHT0	(64)   --centered on tile, facing right.  nextstate is player input direction, else right1
+
+// The rest of the states are defined with the following pattern
+// the number in parenthesis is the decimal value.
+//
+// 0x11 pacmanUP1 (17)	//nextstate up2, if player inputs down then nextstate down0
+// 0x12 pacmanUP2 (18)	//nextstate up3, if player pushes down then nextstate down3
+// 0x13 pacmanUP3 (19)  //nextstate up0, if player pushes down then nextstate down2
+//
+// 0x21 pacmanDOWN1 (33)  //nextstate down2, if player inputs up then nextstate up0
+// 0x22 pacmanDOWN2 (34)  //nextstate down3, if player inputs up then nextstate up3
+// 0x23 pacmanDOWN3 (35)  //nextstate down0, if player inputs up then nextstate up2
+//
+// 0x31 pacmanLEFT1 (49)  //nextstate left2, if player inputs right then nextstate right0
+// 0x32 pacmanLEFT2 (50)  //nextstate left3, if player inputs right then nextstate right3
+// 0x33 pacmanLEFT3 (51)  //nextstate left0, if player inputs right then nextstate right2
+//
+// 0x41 pacmanRIGHT1 (65) //nextstate right2, if player inputs right then nextstate left0
+// 0x42 pacmanRIGHT2 (66) //nextstate right3, if player inputs right then nextstate left3
+// 0x43 pacmanRIGHT3 (67) //nextstate right0, if player inputs right then nextstate left2
+//
+// 0x01 pacmanDEAD1 (1)	//nextstate dead2
+// 0x02 pacmanDEAD2 (2)	//nextstate dead3
+// 0x03 pacmanDEAD3 (3) //nextstate dead4
+// 0x04 pacmanDEAD4 (4) //nextstate pacleft0, reset position, do magic to clear his board tile.
+
+
+
+/////THIS FUNCTION UPDATES PACMAN STATEMACHINE BY ONE STEP.
+//
+//  The first thing it does is check the timer. If the timer is not active, it immediately leaves.
+//    Otherwise:
+//		check what state pacman is in
+//	  	check controller input accordingly,
+//	    update state & position variables  
+//		reset timer
+//		
+
+PACMAN_UPDATE_STATE:
+
+MOV r15 r14 				//store old return adress
+LUI 255 r0					//check timer by making address
+ORI 242 r0
+LOAD r0 r0					//then loading its value and cmp to 1
+CMPI 1 r0
+
+BNE endPacmanStateUpdate	//if timer was not active, do not update state.
+							//else, continue on to update pacman state:
+		
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//:::::::::::::::::GET CURRENT STATE ADDRESS::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+		
+//CURRENT STATE state address 13101, store address in r4 
+LUI 51 r4 
+ORI 45 r4			//store address in r4
+
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//:::::::::::::::::::::::::::ZERO STATES::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//  
+//  If in a ZERO state:
+//  check if on a ghost, if so die.
+//  otherwise, check player input in all directions and start moving.
+//  if player has made no input selections, keep going in current direction.
+
+//Check if in a '0' state:
+
+LOAD r1 r4				//read current state, address in r4
+MOV r1 r0				//copy STATE into temp register.
+ANDI 15 r0				//mask it by ANDing it with 0xF (15)
+CMPI 0 r0   			//if masked value is not zero, check if it is in another state
+BNE UpStates 			//by branching to the next comparison, to check if it is an upstate
+
+
+//  CHECK IF PACMAN HIT GHOST: (Any ghost position is on pacmans square) 
+//  	if hit, set nextstate to dead,
+//      jump to reset timer to progress to next state.
+//	
+//  if position = AnyGhostPosition
+//		nextstate = pacmanDEAD1
+//		BUC endPacmanState_SetTimer
+
+// check if up/down controls are pushed:
+
+state0_updown:
+JAL CheckUP   			//CheckUP is a function that checks if controller up button is pushed
+MOV r0 r1				//store the result of checkup in r1
+JAL CheckDOWN 			//CheckDOWN is a function that checks if controller down button is pushed
+CMP r0 r1				//compare the results of both checkup and checkdown, by comparing r1 and r0
+BEQ state0_NoInput  	//if controller UP/DOWN are pushed together, entire dpad is pushed. act as if no input	
+
+CMPI 1 r0				//Else, check if down was pushed. r0 will be 1 if down was pushed
+BEQ state0_down
+
+
+//if up button was pushed:
+//
+//  check if there is a wall above pacman
+//		Call function pacman_isWallUP, which returns 1 in r0 if pacman is trying to move into a wall.
+//		if pill above
+//			pillAhead = 1	//if there was a pill, set the pill flag accordingly. (in memory)
+	
+	
+JAL pacman_isWallUP					// check if wall above by calling pacman_isWallUP
+CMPI 0 r0						// returns 0 if there is no wall. 
+BNE endPacmanState_SetTimer 	// if there is a wall, do not update state, reset timer.
+								// otherwise, update nextstate to start moving up....
+MOV r4 r0						// move state address to r0 to prepare for setStateUP call
+JAL setStateUP1					// set pacman state to up1
+BUC endPacmanState_SetTimer		// then set timer and exit
+	
+	
+//if down button was pushed
+//  check if wall below with iswallDOWN
+//		check if pill below
+//		   if pill, set pillAhead = 1
+
+state0_down: 
+JAL pacman_isWallDOWN					// check if wall below by calling pacman_isWallDOWN
+CMPI 0 r0						// returns 0 if there is no wall. 
+BNE endPacmanState_SetTimer 	// if there is a wall, do not update state, reset timer.
+								// otherwise, update nextstate to start moving...
+MOV r4 r0						// move state address to r0 to prepare for setState call
+JAL setStateDOWN1				// set pacman state to up1
+BUC endPacmanState_SetTimer		// then set timer and exit
+
+
+state0_leftright:
+JAL CheckLEFT  			//CheckLEFT is a function that checks if controller up button is pushed
+MOV r0 r1				//store the result of checkLEFT in r1
+JAL CheckRIGHT 			//CheckRIGHT is a function that checks if controller right button is pushed
+CMP r0 r1				//compare the results of both checkup and checkdown, by comparing r1 and r0
+BEQ state0_NoInput  	//if controller LEFT/RIGHT are pushed together, entire dpad is pushed. act as if no input	
+
+CMPI 1 r0				//Else, check if RIGHT was pushed. r0 will be 1 if right was pushed
+BEQ state0_right
+
+JAL pacman_isWallLEFT			// check if wall LEFT by calling pacman_isWallLEFT
+CMPI 0 r0						// returns 0 if there is no wall. 
+BNE endPacmanState_SetTimer 	// if there is a wall, do not update state, reset timer.
+								// otherwise, update nextstate to start moving....
+MOV r4 r0						// move state address to r0 to prepare for setState call
+JAL setStateLEFT1					// set pacman state to left1
+BUC endPacmanState_SetTimer		// then set timer and exit
+
+state0_right: 
+JAL pacman_isWallRIGHT			// check if wall RIGHT by calling pacman_isWallRIGHT
+CMPI 0 r0						// returns 0 if there is no wall. 
+BNE endPacmanState_SetTimer 	// if there is a wall, do not update state, reset timer.
+								// otherwise, update nextstate to start moving....
+MOV r4 r0						// move state address to r0 to prepare for setState call
+JAL setStateRIGHT1				// set pacman state to right
+BUC endPacmanState_SetTimer		// then set timer and exit			
+
+state0_NoInput:
+//CHECK IF WALL AHEAD HERE!!!
+LOAD r1 r4 						//load state
+
+//check if up0, check wall above
+state0_up0:
+CMPI 16 r1						//check if in up0 state.
+BNE	state0_down0					//if not in up0 state, check if in down0 state, else:
+JAL pacman_isWallUP					
+CMPI 0 r0						//check if wall is above
+BNE	endPacmanState_SetTimer			//if there is wall, do not update state, reset timer. else:
+MOV r4 r0						// move state address to r0 to prepare for setStateUP call
+JAL setStateUP1					// set pacman state to up1
+BUC endPacmanState_SetTimer
+
+state0_down0:
+CMPI 32 r1						//check if in down0 state.
+BNE	state0_left0					//if not in down0 state, check if in left0 state, else:
+JAL pacman_isWallDOWN					
+CMPI 0 r0						//check if wall is below
+BNE	endPacmanState_SetTimer			//if there is wall, do not update state, reset timer. else:
+MOV r4 r0						// move state address to r0 to prepare for setState call
+JAL setStateDOWN1					// set pacman state 	
+BUC endPacmanState_SetTimer
+
+state0_left0:
+CMPI 48 r1						//check if in left0 state.
+BNE	state0_right0					//if not in down0 state, check if in left0 state, else:
+JAL pacman_isWallLEFT					
+CMPI 0 r0						//check if wall is left
+BNE	endPacmanState_SetTimer			//if there is wall, do not update state, reset timer. else:
+MOV r4 r0						// move state address to r0 to prepare for setState call
+JAL setStateLEFT1				// set pacman state to left1
+BUC endPacmanState_SetTimer
+
+state0_right0: 					//remaining cause **should** be right0, treat all eroneous cases as right 0
+JAL pacman_isWallRIGHT					
+CMPI 0 r0						//check if wall is right
+BNE	endPacmanState_SetTimer			//if there is wall, do not update state, reset timer. else:
+MOV r4 r0						// move state address to r0 to prepare for setState call
+JAL setStateRIGHT1					// set pacman state 	
+BUC endPacmanState_SetTimer
+
+////:::::::::::::::::::::::End Zero States::::::::::::::::::::::::::
+
+UpStates:
+
+//if we are traveling up and not centered on a tile, we will
+//continue to travel up, thus only the down button must be checked.
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanUP1:::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::	
+
+pacmanUP1:
+	LOAD r1 r4						//read current state, address in r4
+	CMP 17	r1						//if state is pacmanUP1						
+	BNE pacmanUP2	
+	JAL CheckDOWN					//check if down control is pushed
+	CMP 1 r0
+	BNE 4							//if button isnt pushed, skip down 4 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateDOWN0					// set pacman state 	
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateUP2					// set pacman state 	
+	BUC endPacmanState_SetTimer	
+	
+			
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanUP2:::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+pacmanUP2:	
+	LOAD r1 r4						//read current state, address in r4
+	CMP 18	r1						//if state is pacmanUP2						
+	BNE pacmanUP3	
+	JAL CheckDOWN					//check if down control is pushed
+	CMP 1 r0
+	BNE 9							//if button isnt pushed, skip down 9 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateDOWN3					// set pacman state 
+	LUI 51 r0							//update pacman position by making position address in r0 
+	ORI 44 r0								
+	LOAD r1 r0								//then getting it in r1
+	ADDI 53 r1									//adding one
+	STOR r1 r0								//and storing back to position address in r0
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateUP3					// set pacman state 
+	BUC endPacmanState_SetTimer	
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanUP3:::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+	
+pacmanUP3:
+	LOAD r1 r4						//read current state, address in r4
+	CMP 19	r1						//if state is pacmanUP3						
+	BNE pacmanDOWN1					//
+	JAL CheckDOWN					//check if down control is pushed
+	CMP 1 r0
+	BNE 4							//if button isnt pushed, skip down 4 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateDOWN2					// set pacman state 
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateUP0					// set pacman state 
+	BUC endPacmanState_SetTimer	
+
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::			
+			
+DownStates:
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanDOWN1:::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+pacmanDOWN1:
+	LOAD r1 r4						//read current state, address in r4
+	CMP 33	r1						//if state is pacmanDOWN1						
+	BNE pacmanDOWN2	
+	JAL CheckUP					//check if control is pushed
+	CMP 1 r0
+	BNE 4							//if button isnt pushed, skip down 4 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateUP0					// set pacman state 	
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateDOWN2					// set pacman state 	
+	BUC endPacmanState_SetTimer	
+	
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanDOWN2:::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+pacmanDOWN2:
+
+	LOAD r1 r4						//read current state, address in r4
+	CMP 34	r1						//if state is pacmanDOWN2					
+	BNE pacmanDOWN3	
+	JAL CheckUP					//check if control is pushed
+	CMP 1 r0
+	BNE 9							//if button isnt pushed, skip down 9 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateUP3					// set pacman state 
+	LUI 51 r0							//update pacman position by making position address in r0 
+	ORI 44 r0								
+	LOAD r1 r0								//then getting it in r1
+	ADDI -53 r1									//adding one
+	STOR r1 r0								//and storing back to position address in r0
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateDOWN3					// set pacman state 
+	BUC endPacmanState_SetTimer	
+	
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanDOWN3:::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::			
+			
+pacmanDOWN3:
+	LOAD r1 r4						//read current state, address in r4
+	CMP 35	r1						//check  state						
+	BNE pacmanLEFT1					//
+	JAL CheckUP					//check if down control is pushed
+	CMP 1 r0
+	BNE 4							//if button isnt pushed, skip down 4 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateUP2					// set pacman state 
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateDOWN0					// set pacman state 
+	BUC endPacmanState_SetTimer	
+			
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::			
+			
+LeftStates:
+	
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanLEFT1:::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+pacmanLEFT1:
+	LOAD r1 r4						//read current state, address in r4
+	CMP 49	r1						//check  state							
+	BNE pacmanLEFT2	
+	JAL CheckRIGHT					//check if control is pushed
+	CMP 1 r0
+	BNE 4							//if button isnt pushed, skip down 4 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateRIGHT0					// set pacman state 	
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateLEFT2					// set pacman state 	
+	BUC endPacmanState_SetTimer	
+	
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanLEFT2:::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+pacmanLEFT2:
+
+	LOAD r1 r4						//read current state, address in r4
+	CMP 50	r1						//check  state						
+	BNE pacmanLEFT3	
+	JAL CheckRIGHT					//check if control is pushed
+	CMP 1 r0
+	BNE 9							//if button isnt pushed, skip down 9 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateRIGHT3					// set pacman state 
+	LUI 51 r0							//update pacman position by making position address in r0 
+	ORI 44 r0								
+	LOAD r1 r0								//then getting it in r1
+	ADDI 1 r1									//adding one
+	STOR r1 r0								//and storing back to position address in r0
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateLEFT3					// set pacman state 
+	BUC endPacmanState_SetTimer	
+	
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanLEFT3:::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::			
+			
+pacmanLEFT3:
+	LOAD r1 r4						//read current state, address in r4
+	CMP 51	r1						//check  state							
+	BNE pacmanRIGHT1					//
+	JAL CheckRIGHT					//check if down control is pushed
+	CMP 1 r0
+	BNE 4							//if button isnt pushed, skip down 4 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateLEFT2					// set pacman state 
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateRIGHT0					// set pacman state 
+	BUC endPacmanState_SetTimer	
+			
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+RightStates:
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanRIGHT1:::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+pacmanRIGHT1:
+	LOAD r1 r4						//read current state, address in r4
+	CMP 65	r1						//check  state							
+	BNE pacmanRIGHT2	
+	JAL CheckLEFT					//check if control is pushed
+	CMP 1 r0
+	BNE 4							//if button isnt pushed, skip down 4 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateLEFT0					// set pacman state 	
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateRIGHT2					// set pacman state 	
+	BUC endPacmanState_SetTimer	
+	
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanRIGHT2:::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+pacmanRIGHT2:
+
+	LOAD r1 r4						//read current state, address in r4
+	CMP 66	r1						//check  state					
+	BNE pacmanRIGHT3	
+	JAL CheckLEFT					//check if control is pushed
+	CMP 1 r0
+	BNE 9							//if button isnt pushed, skip down 9 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateLEFT3					// set pacman state 
+	LUI 51 r0							//update pacman position by making position address in r0 
+	ORI 44 r0								
+	LOAD r1 r0								//then getting it in r1
+	ADDI 1 r1									//adding one
+	STOR r1 r0								//and storing back to position address in r0
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateRIGHT3					// set pacman state 
+	BUC endPacmanState_SetTimer	
+	
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::pacmanRIGHT3:::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::			
+			
+pacmanRIGHT3:
+	LOAD r1 r4						//read current state, address in r4
+	CMP 67	r1						//check  state						
+	BNE pacmanDEAD1					//
+	JAL CheckLEFT					//check if down control is pushed
+	CMP 1 r0
+	BNE 4							//if button isnt pushed, skip down 4 lines, otherwise do the following:
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateRIGHT2					// set pacman state 
+	BUC endPacmanState_SetTimer
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateLEFT0					// set pacman state 
+	BUC endPacmanState_SetTimer	
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::	
+
+DeadStates:	
+
+pacmanDEAD1:	
+	LOAD r1 r4						//read current state, address in r4
+	CMP 1	r1						//if state is pacmanDEAD1					
+	BNE pacmanDEAD2					//
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateDEAD2					// set pacman state 
+	BUC endPacmanState_SetTimer	
+	
+pacmanDEAD2:	
+	LOAD r1 r4						//read current state, address in r4
+	CMP 1	r1						//if state is pacmanDEAD1					
+	BNE pacmanDEAD3					//
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateDEAD3					// set pacman state 
+	BUC endPacmanState_SetTimer	
+	
+pacmanDEAD3:	
+	LOAD r1 r4						//read current state, address in r4
+	CMP 1	r1						//if state is pacmanDEAD1					
+	BNE pacmanDEAD4					//
+	MOV r4 r0						// move state address to r0 to prepare for setState call
+	JAL setStateDEAD4					// set pacman state 
+	BUC endPacmanState_SetTimer	
+		
+pacmanDEAD4:	
+										
+	MOV r4 r0						// //default case, move state address to r0 to prepare for setState call
+	JAL setStateLEFT0					// set pacman state 
+	BUC endPacmanState_SetTimer	
+	LUI 51 r0							//update pacman position by making position address in r0 
+	ORI 44 r0								
+	LOAD r1 r0								//then getting it in r1
+	ADDI 1 r1									//adding one
+	STOR r1 r0								//and storing back to position address in r0
+		
+endPacmanState_SetTimer:
+LUI 255 r0			//make timer reset address
+ORI 243 r0
+LUI 2 r1			//set 512 miliseconds on timer
+STOR r1 r0			
+
+endPacmanStateUpdate:
+MOV r14 r15 		//restore old return adress
+RETX 				//return
+
+PACMAN DRAW GLYPH
+	
+	if (DrawCounter = 1)
+	
+		if opentimer = 1
+			open = ~open
+		
+		if upstate 0:
+			if open
+				draw glyph up open mouth at location
+				draw blank glyph at square below
+			else
+				draw glyph up closed mouth at location
+				draw blank glyph at square below
+		
+		else if upstate1:
+			if open
+				draw open glyph1 at location
+				draw open glyph2 at location one above
+				
+			if closed
+				draw closed glyphs at location
+		
+		else if upstate2:
+			if open
+				draw open glyph3 at location
+				draw open glyph4 at location +53 (one above)
+				
+			if closed
+				draw closed glyphs at location
+				
+		else if upstate3
+			...etcetera...
+
+		if pillAhead
+			replace glyphs with pill versions instead
+			
+END PACMAN DRAW GLYPH
+
+//CHECK_DIRECTION functions. Use only register r0 and ra for safety. This way when calling these functions,
+//only the r0 and ra registers must be preserved first if they are important.
+
+CheckRIGHT:
+LUI 255 r0	//make right address in r0
+ORI 248 r0	
+LOAD r0 r0	//save result back into r0
+RETX
+		
+CheckLEFT:
+LUI 255 r0	//make address in r0
+ORI 249 r0
+LOAD r0 r0	//save result back into r0
+RETX		//return
+
+CheckUP:
+LUI 255 r0
+ORI 251 r0
+LOAD r0 r0
+RETX
+
+CheckDOWN:
+LUI 255 r0
+ORI 250 r0
+LOAD r0 r0
+RETX
+
+pacman_isWallUP:
+LUI 51 r0		//make address 13200 where pacman location is stored
+ORI 144 r0			
+LOAD r0 r0		//save result back into r0
+ADDI 53 r0		//increment r0 to get location of square above pacman (53 adress spaces higher in memory)
+LOAD r0 r0		// LOAD glyph number				 
+CMPI 800 r0		// Wall glyphs are numbers 800+
+SGE r0			// use Scond instruction to set r0 to 1 if r0 is greater or equal to 800, else 0 if not.
+RETX			// return to calling function		
+
+pacman_isWallDOWN:
+LUI 51 r0		//make address 13200 where pacman location is stored
+ORI 144 r0			
+LOAD r0 r0		//save result back into r0
+ADDI -53 r0		//increment r0 to get location of square below pacman (53 adress spaces lower in memory)
+LOAD r0 r0		// LOAD glyph number				 
+CMPI 800 r0		// Wall glyphs are numbers 800+
+SGE r0			// use Scond instruction to set r0 to 1 if r0 is greater or equal to 800, else 0 if not.
+RETX			// return to calling function		
+
+pacman_isWallLEFT:
+LUI 51 r0		//make address 13200 where pacman location is stored
+ORI 144 r0			
+LOAD r0 r0		//save result back into r0
+ADDI 1 r0		//increment r0 to get location of square left of pacman (1 space higher in memory)
+LOAD r0 r0		// LOAD glyph number				 
+CMPI 800 r0		// Wall glyphs are numbers 800+
+SGE r0			// use Scond instruction to set r0 to 1 if r0 is greater or equal to 800, else 0 if not.
+RETX			// return to calling function		
+
+pacman_isWallRIGHT:
+LUI 51 r0		//make address 13200 where pacman location is stored
+ORI 144 r0			
+LOAD r0 r0		//save result back into r0
+ADDI -1 r0		//increment r0 to get location of square right of pacman (1 space lower in memory)
+LOAD r0 r0		// LOAD glyph number				 
+CMPI 800 r0		// Wall glyphs are numbers 800+
+SGE r0			// use Scond instruction to set r0 to 1 if r0 is greater or equal to 800, else 0 if not.
+RETX			// return to calling function		

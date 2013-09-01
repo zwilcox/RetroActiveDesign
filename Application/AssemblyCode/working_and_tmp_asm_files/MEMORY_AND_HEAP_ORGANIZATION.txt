@@ -1,0 +1,147 @@
+MEMORY ADDRESS/HEAP ORGANIZATION:
+
+0......
+
+	CODE0
+
+x......
+
+	NOT USED
+	
+10679... 
+
+	Frame Bufer Copy
+		--stores information about pills/pacman.
+	
+12800...
+
+	ARI GHOST VARIABLES // GREEN
+	12800: location
+	13000: present state
+	
+	12810: UP heuristic
+	12811: DOWN heur
+	12812: LEFT heur
+	12813: RIGHT heur
+	
+	12820: Vert heur
+	23821: Horiz heur
+	
+12900...
+
+	ZACH GHOST VARIABLES
+	12900: location
+	12901: present state
+
+13000...
+
+	JEFF GHOST VARIABLES  //C
+	13000: location
+	13001: present state
+
+13100...
+
+	TODD GHOST VARIABLES //RED
+	13100: location
+	13101: present state
+
+13200...
+
+	PACMAN VARIABLES
+	13200: location
+	13201: present state
+	13202: open/closed toggle <---value always 1 for open
+							      or 0 for closed
+	
+	13210: pillAhead
+	13211: pillBehind
+	
+	13220: column
+	13221: row
+	
+13300...
+
+	GLOBAL GAME VARIABLES
+	13300: pacman lives left
+	13301: Pills left on board
+	13302: SCORE	// LUI 51 ORI 246
+	13303: collected berry boolean
+	13304: collected bannana boolean
+	13305: collected watermelon boolean
+	
+	13310: ghost mode: 1 = scatter, 0 = chase
+	13311: edible status: 0 = normal, 1 = edible
+	13312: edible flash: 1 = lblue, 0 = dblue
+	13313: SCORE 1's		// LUI 52 ORI 1
+	13314: SCORE 10's		// LUI 52 ORI 2
+	13315: SCORE 100's		// LUI 52 ORI 3
+	13316: SCORE 1000's		// LUI 52 ORI 4
+	13317: SCORE 10,000's	// LUI 52 ORI 5
+
+13392...
+
+	preloaded map, DO NOT WRITE. DO NOT CHANGE.
+
+14263...
+
+FRAME BUFFER > values written here show on screen
+FRAME BUFFER > store values coresponding to glyph numbers
+FRAME BUFFER
+
+16384...
+
+	I/O SPACE:
+
+	65535 NES_A 		#FFFF LUI 255 ORI 255
+	65534 NES_B 		#FFFE LUI 255 ORI 254
+	65533 NES_SELECT 	#FFFD LUI 255 ORI 253
+	65532 NES_START 	#FFFC LUI 255 ORI 252
+	65531 NES_UP 		#FFFB LUI 255 ORI 251
+	65530 NES_DOWN 		#FFFA LUI 255 ORI 250
+	65529 NES_LEFT 		#FFF9 LUI 255 ORI 249
+	65528 NES_RIGHT		#FFF8 LUI 255 ORI 248
+	65527 MP3 TRIGGER	#FFF7 LUI 255 ORI 247
+	65526 SEV SEG DISPLAY	 LUI 255 ORI 246
+	65523 COUNTER_1_SET LUI 255 ORI 243  (PACMAN present state change timer)
+	65522 COUNTER_1_READ LUI 255 ORI 242
+
+	65521 COUNTER_2_SET	LUI 255 ORI 241(ARI GHOST present state change timer?)
+	65520 COUNTER_2_READ LUI 255 ORI 240
+	
+	65519 COUNTER_2_SET	LUI 255 ORI 239	(ZACH GHOST present state change timer?)
+	65518 COUNTER_2_READ LUI 255 ORI 238
+	
+	65517 COUNTER_2_SET	LUI 255 ORI 237	(JEFF GHOST present state change timer?)
+	65516 COUNTER_2_READ LUI 255 ORI 236
+	
+	65515 COUNTER_2_SET	LUI 255 ORI 235 (TODD GHOST present state change timer?)
+	65514 COUNTER_2_READ LUI 255 ORI 234
+	
+	65513 COUNTER_2_SET	LUI 255 ORI 233	(MAP DRAW present state change timer?)
+	65512 COUNTER_2_READ
+	
+	65511 COUNTER_2_SET	LUI 255 ORI 231	(PACMAN OPEN/CLOSED timer?)
+	65510 COUNTER_2_READ LUI 255 ORI 230
+	
+	65509 COUNTER_2_SET	LUI 255 ORI 229(GHOST FLASH WHEN EDIBLE timer?)
+	65508 COUNTER_2_READ LUI 255 ORI 228
+
+	65507 COUNTER_2_SET	LUI 255 ORI 227	(SCATTER MODE)
+	65506 COUNTER_2_READ LUI 255 ORI 226
+	
+	
+	
+	65505 NES_A_2 		#FFFF LUI 255 ORI 225
+	65504 NES_B_2 		#FFFE LUI 255 ORI 224
+	65503 NES_SELECT_2 	#FFFD LUI 255 ORI 223
+	65502 NES_START_2	#FFFC LUI 255 ORI 222
+	65501 NES_UP_2 		#FFFB LUI 255 ORI 221
+	65500 NES_DOWN_2 	#FFFA LUI 255 ORI 220
+	65499 NES_LEFT_2 	#FFF9 LUI 255 ORI 219
+	65498 NES_RIGHT_2	#FFF8 LUI 255 ORI 218
+	
+	65497 max3counter	LUI 255 ORI 217
+	
+	
+	
+...65535

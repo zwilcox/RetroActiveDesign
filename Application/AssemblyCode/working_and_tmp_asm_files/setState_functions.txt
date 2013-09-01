@@ -1,0 +1,154 @@
+//::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::SET_STATES::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::Store states to memory::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::
+
+
+// STATES:
+// For the '0' states, the state feild will evaluate to 0 if masked with 0x0F (15).
+// the ZERO ('0') states are where pacman is centered on a tile.
+// In the 0 state pacman will continue moving forward unless the player inputs a direction
+// if pacman reaches any state0 and a ghost position is this tile, nextstate is dead1.
+//
+// 0x10: pacmanUP0  (16)	   --centered on tile, facing up.     nextstate will be up1, unless player input
+// 0x20: pacmanDOWN0   (32)	   --centered on tile, facing down.   nextstate is player input direction, else down1
+// 0x30: pacmanLEFT0   (48)	   --centered on tile, facing left.   nextstate is player input direction, else left1
+// 0x40: pacmanRIGHT0	(64)   --centered on tile, facing right.  nextstate is player input direction, else right1
+
+// The rest of the states are defined with the following pattern
+// the number in parenthesis is the decimal value.
+//
+// 0x11 pacmanUP1 (17)	//nextstate up2, if player inputs down then nextstate down0
+// 0x12 pacmanUP2 (18)	//nextstate up3, if player pushes down then nextstate down3
+// 0x13 pacmanUP3 (19)  //nextstate up0, if player pushes down then nextstate down2
+//
+// 0x21 pacmanDOWN1 (33)  //nextstate down2, if player inputs up then nextstate up0
+// 0x22 pacmanDOWN2 (34)  //nextstate down3, if player inputs up then nextstate up3
+// 0x23 pacmanDOWN3 (35)  //nextstate down0, if player inputs up then nextstate up2
+//
+// 0x31 pacmanLEFT1 (49)  //nextstate left2, if player inputs right then nextstate right0
+// 0x32 pacmanLEFT2 (50)  //nextstate left3, if player inputs right then nextstate right3
+// 0x33 pacmanLEFT3 (51)  //nextstate left0, if player inputs right then nextstate right2
+//
+// 0x41 pacmanRIGHT1 (65) //nextstate right2, if player inputs right then nextstate left0
+// 0x42 pacmanRIGHT2 (66) //nextstate right3, if player inputs right then nextstate left3
+// 0x43 pacmanRIGHT3 (67) //nextstate right0, if player inputs right then nextstate left2
+//
+// 0x01 pacmanDEAD1 (1)	//nextstate dead2
+// 0x02 pacmanDEAD2 (2)	//nextstate dead3
+// 0x03 pacmanDEAD3 (3) //nextstate dead4
+// 0x04 pacmanDEAD4 (4) //nextstate pacleft0, reset position, do magic to clear his board tile.
+
+
+// The following functions assume 'state address' has been moved to r0
+
+//**actorUP**
+
+setStateUP0:
+movi 16 r1
+STOR r1 r0
+RETX
+
+setStateUP1:
+movi 17 r1
+STOR r1 r0
+RETX
+
+setStateUP2:
+movi 18 r1
+STOR r1 r0
+RETX
+
+setStateUP3:
+movi 19 r1
+STOR r1 r0
+RETX
+
+//**actorDOWN**
+
+setStateDOWN0:
+movi 32 r1
+STOR r1 r0
+RETX
+
+setStateDOWN1:
+movi 33 r1
+STOR r1 r0
+RETX
+
+setStateDOWN2:
+movi 34 r1
+STOR r1 r0
+RETX
+
+setStateDOWN0:
+movi 35 r1
+STOR r1 r0
+RETX
+
+//**actorLEFT**
+
+setStateLEFT0:
+movi 48 r1
+STOR r1 r0
+RETX
+
+setStateLEFT1:
+movi 49 r1
+STOR r1 r0
+RETX
+
+setStateLEFT2:
+movi 50 r1
+STOR r1 r0
+RETX
+
+setStateLEFT3:
+movi 51 r1
+STOR r1 r0
+RETX
+
+//**actorRIGHT**
+
+setStateLEFT0:
+movi 64 r1
+STOR r1 r0
+RETX
+
+setStateLEFT1:
+movi 65 r1
+STOR r1 r0
+RETX
+
+setStateLEFT2:
+movi 66 r1
+STOR r1 r0
+RETX
+
+setStateLEFT3:
+movi 67 r1
+STOR r1 r0
+RETX
+
+//**pacmanDEAD**
+
+setStateDEAD1:
+movi 1 r1
+STOR r1 r0
+RETX
+
+setStateDEAD2:
+movi 2 r1
+STOR r1 r0
+RETX
+
+setStateDEAD3:
+movi 3 r1
+STOR r1 r0
+RETX
+
+setStateDEAD4:
+movi 4 r1
+STOR r1 r0
+RETX

@@ -1,0 +1,14 @@
+0 = empty space
+1- 9 = wall
+
+10 - 13 = pac-man open mouth
+
+14 - 17 = pac-man closed
+
+18  = pill
+19  = super pill
+
+20 - 35 = pac-man dies ghost
+36 - 44 = pac man eats ghost
+
+ 

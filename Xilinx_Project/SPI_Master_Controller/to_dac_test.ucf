@@ -1,0 +1,23 @@
+
+# PlanAhead Generated physical constraints 
+
+NET "MOSI" LOC = T4;
+NET "SPI_CS" LOC = N8;
+NET "clock" LOC = C9;
+NET "reset" LOC = K17;
+NET "resetDac" LOC = P8;
+NET "sClk" LOC = U16;
+
+# PlanAhead Generated IO constraints 
+
+NET "MOSI" IOSTANDARD = LVCMOS33;
+NET "SPI_CS" IOSTANDARD = LVCMOS33;
+NET "clock" IOSTANDARD = LVCMOS33;
+NET "reset" IOSTANDARD = LVTTL;
+NET "resetDac" IOSTANDARD = LVCMOS33;
+NET "sClk" IOSTANDARD = LVCMOS33;
+NET "MOSI" DRIVE = 8;
+NET "SPI_CS" DRIVE = 8;
+NET "resetDac" DRIVE = 8;
+NET "sClk" DRIVE = 8;
+NET "reset" PULLDOWN;

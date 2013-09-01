@@ -1,0 +1,10 @@
+[Inputs]
+clock
+reset
+=toCount[15:0]=
+[Outputs]
+countRdy
+[BiDir]
+[ATTRIBUTES]
+VeriModel milliSecondCounter
+

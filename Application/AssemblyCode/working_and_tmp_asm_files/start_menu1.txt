@@ -1,0 +1,113 @@
+//***************************************
+//************Start Menu*****************
+//***************************************
+
+
+// A(114) - Z(139)
+// !(140)
+// 0(169) - 9(178)
+
+start_menu:
+// zero out map
+	//JAL r9 clearscreen
+	MOVI 0 r8	// zero out r8 for toggle
+	LUI 63 r0	// top left most glyph address
+	ORI 255 r0
+	ADDI -106 r0
+	ADDI -106 r0
+	ADDI -106 r0
+	ADDI -106 r0	// offset rows by 4 down
+	ADDI -22 r0	// and 22 columns
+	MOVI 129 r1	// Store 'P'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 114 r1	// Store 'A'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 245 r1	// Store 'pacman0'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 126 r1	// Store 'M'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 114 r1	// Store 'A'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 127 r1	// Store 'N'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 0 r1	// Store ' '
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 171 r1	// Store '2'
+	STOR r1 r0	
+	ADDI -1 r0
+	//MOVI 271 r1	// Store 'pill'
+	LUI 1 r1
+	ORI 15 r1
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 169 r1	// Store '0'
+	STOR r1 r0
+	ADDI 6 r0	
+	ADDI -106 r0
+	ADDI -106 r0
+	ADDI -106 r0
+	ADDI -106 r0	// offset rows by 4 down
+	MOVI 129 r1	// Store 'P'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 131 r1	// Store 'R'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 118 r1	// Store 'E'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 132 r1	// Store 'S'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 132 r1	// Store 'S'
+	STOR r1 r0
+	ADDI 6 r0
+	ADDI -106 r0
+	ADDI -106 r0
+	ADDI -106 r0
+	ADDI -106 r0
+	MOVI 133 r1	// Store 'T'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 128 r1	// Store 'O'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 0 r1	// Store ' '
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 115 r1	// Store 'B'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 118 r1	// Store 'E'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 120 r1	// Store 'G'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 122 r1	// Store 'I'
+	STOR r1 r0
+	ADDI -1 r0
+	MOVI 127 r1	// Store 'N'
+	STOR r1 r0
+	BUC 0
+	
+	// clearscreen:
+	//LUI 63 r2	
+	//ORI 255 r2	# r2 is current fb index
+	//LUI	55 r3
+	//ORI 183 r3	# r3 is last square outside of fp
+	//MOVI 0 r4   # load fb with glyph 0
+	//CMP	r3 r2
+	//BEQ 4
+	//STOR r4 r2
+	//ADDI -1 r2
+	//BUC -4
+	//RETX
+	

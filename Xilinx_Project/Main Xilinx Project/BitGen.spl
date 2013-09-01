@@ -1,0 +1,15 @@
+[Inputs]
+bright
+=glyphCol[3:0]=
+=glyphR[11:0]=
+=glyphG[11:0]=
+=glyphB[11:0]=
+=hCount[10:0]=
+[Outputs]
+red
+green
+blue
+[BiDir]
+[ATTRIBUTES]
+VeriModel BitGen
+
